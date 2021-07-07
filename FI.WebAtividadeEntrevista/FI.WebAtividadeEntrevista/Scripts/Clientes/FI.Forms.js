@@ -71,6 +71,7 @@ function LimparCamposBeneficiario() {
     $("#alertBeneficiario").remove();
     $("#formBeneficiarios")[0].reset();
     $("#keyBeneficiario").val('');
+    $("#SubmitBeneficiario").text("Incluir");
 }
 
 function ValidarCPF(cpf) {
