@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\FI.WebAtividadeEntrevista",
+    "\\FI.WebAtividadeEntrevista\\FI.AtividadeEntrevista",
+    "\\FI.WebAtividadeEntrevista\\FI.WebAtividadeEntrevista"
   ],
   "PreviewInSolutionExplorer": false
 }

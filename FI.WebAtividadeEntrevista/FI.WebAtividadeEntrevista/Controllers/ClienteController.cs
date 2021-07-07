@@ -11,11 +11,22 @@ namespace WebAtividadeEntrevista.Controllers
 {
     public class ClienteController : Controller
     {
+        public string ErroCPF(long Id, string CPF)
+        {
+            BoCliente bo = new BoCliente();
+            if (bo.VerificarExistencia(Id, CPF))
+                return "Já existe um cliente com o CPF informado";
+
+            if (!bo.ValidarCPF(CPF))
+                return "O CPF informado é inválido";
+
+            return string.Empty;
+        }
+
         public ActionResult Index()
         {
             return View();
         }
-
 
         public ActionResult Incluir()
         {
@@ -38,16 +49,11 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                if (bo.VerificarExistencia(model.Id, model.CPF))
+                string erro = ErroCPF(model.Id, model.CPF);
+                if (!string.IsNullOrEmpty(erro))
                 {
                     Response.StatusCode = 400;
-                    return Json("Já existe um cliente com o CPF informado");
-                }
-
-                if (!bo.ValidarCPF(model.CPF))
-                {
-                    Response.StatusCode = 400;
-                    return Json("O CPF informado é inválido");
+                    return Json(erro);
                 }
 
                 model.Id = bo.Incluir(new Cliente()
@@ -69,12 +75,8 @@ namespace WebAtividadeEntrevista.Controllers
                     BoBeneficiario boBeneficiario = new BoBeneficiario();
                     foreach (var beneficiario in model.Beneficiarios)
                     {
-                        boBeneficiario.Incluir(new Beneficiario()
-                        {
-                            CPF = beneficiario.CPF,
-                            Nome = beneficiario.Nome,
-                            IdCliente = model.Id
-                        });
+                        beneficiario.IdCliente = model.Id;
+                        boBeneficiario.Incluir(beneficiario);
                     }
                 }
 
@@ -98,16 +100,11 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                if (bo.VerificarExistencia(model.Id, model.CPF))
+                string erro = ErroCPF(model.Id, model.CPF);
+                if (!string.IsNullOrEmpty(erro))
                 {
                     Response.StatusCode = 400;
-                    return Json("O CPF informado é inválido");
-                }
-
-                if (!bo.ValidarCPF(model.CPF))
-                {
-                    Response.StatusCode = 400;
-                    return Json("CPF inválido");
+                    return Json(erro);
                 }
 
                 bo.Alterar(new Cliente()
@@ -132,12 +129,8 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     foreach (var beneficiario in model.Beneficiarios)
                     {
-                        boBeneficiario.Incluir(new Beneficiario()
-                        {
-                            CPF = beneficiario.CPF,
-                            Nome = beneficiario.Nome,
-                            IdCliente = model.Id
-                        });
+                        beneficiario.IdCliente = model.Id;
+                        boBeneficiario.Incluir(beneficiario);
                     }
                 }
 
